@@ -10,7 +10,6 @@
   /* ---------- Réglages ---------- */
   var DATA_URL  = 'data/fiches.json';
   var CFG_KEY   = 'fiches_github_cfg';
-  var EDIT_KEY  = 'fiches_edit_mode';
   var ICONES    = ['alternate', 'ana', 'timelimit', 'mantika', 'settimocielo'];
 
   // Les 12 lignes du bloc « about », dans l'ordre d'origine.
@@ -265,6 +264,9 @@
             '<label>Dossier du site <em>(« docs » si Pages publie depuis /docs)</em><input id="fp-dir" type="text" placeholder="vide = racine"></label></div>' +
             '<label>Jeton d’accès (fine-grained, « Contents : Read and write » sur ce seul dépôt)' +
             '<input id="fp-token" type="password" autocomplete="off"></label>' +
+            '<button type="button" id="fp-lien">Copier le lien d’installation</button>' +
+            '<div class="fp-hint">Ouvre ce lien sur un autre navigateur ou appareil : compte, dépôt et jeton s’y installent seuls. ' +
+            'Il contient le jeton : garde-le comme un mot de passe.</div>' +
           '</details>' +
 
         '</div>' +
@@ -273,10 +275,6 @@
           '<button type="submit" id="fp-save">Enregistrer la fiche</button></div>' +
       '</form>';
     document.body.appendChild(ov);
-
-    var toast = document.createElement('div');
-    toast.id = 'fp-toast'; toast.hidden = true;
-    document.body.appendChild(toast);
 
     // Interactions
     var $ = function (id) { return document.getElementById(id); };
@@ -292,6 +290,7 @@
     });
     $('fp-v-' + IDX_COULEUR).addEventListener('input', function () { couleurTouchee = true; });
     $('fp-v-' + IDX_COULEUR).value = $('fp-c2').value;
+    $('fp-lien').addEventListener('click', copierLienInstallation);
     $('fp-modal').addEventListener('submit', soumettre);
   }
 
@@ -333,6 +332,7 @@
 
   function toast(msg) {
     var t = document.getElementById('fp-toast');
+    if (!t) { t = document.createElement('div'); t.id = 'fp-toast'; document.body.appendChild(t); }
     t.textContent = msg; t.hidden = false;
     clearTimeout(toast._t);
     toast._t = setTimeout(function () { t.hidden = true; }, 9000);
@@ -439,6 +439,30 @@
     setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
   }
 
+  /* ---------- Lien d'installation (#setup=…) ---------- */
+  function copierLienInstallation() {
+    var cfg = lireConfigFormulaire();
+    if (!cfg.owner || !cfg.repo || !cfg.token) return statut('Renseigne d’abord compte, dépôt et jeton.', true);
+    var url = root.location.origin + root.location.pathname + '#setup=' + encodeURIComponent(utf8VersB64(JSON.stringify(cfg)));
+    var ok = function () { statut('Lien copié. Garde-le précieusement : il contient ton jeton.'); };
+    if (root.navigator.clipboard && root.navigator.clipboard.writeText) {
+      root.navigator.clipboard.writeText(url).then(ok, function () { root.prompt('Copie ce lien :', url); });
+    } else { root.prompt('Copie ce lien :', url); }
+  }
+
+  function installerDepuisLien() {
+    var m = /^#setup=(.+)$/.exec(root.location.hash);
+    if (!m) return;
+    try {
+      var c = JSON.parse(b64VersUtf8(decodeURIComponent(m[1])));
+      if (c && c.owner && c.repo && c.token) {
+        stockageEcrire(CFG_KEY, JSON.stringify({ owner: c.owner, repo: c.repo, branch: c.branch || 'main', dir: c.dir || '', token: c.token }));
+        toast('Installation terminée : le jeton est enregistré dans ce navigateur.');
+      }
+    } catch (e) { /* lien invalide : ignoré */ }
+    root.history.replaceState(null, '', root.location.pathname + root.location.search);   // retire le jeton de l'adresse
+  }
+
   /* ---------- Envoi du formulaire ---------- */
   async function soumettre(e) {
     e.preventDefault();
@@ -475,7 +499,7 @@
     }
   }
 
-  /* ---------- Bouton flottant (visible seulement en mode édition) ---------- */
+  /* ---------- Bouton flottant ---------- */
   function afficherBouton() {
     if (document.getElementById('fp-open')) return;
     var b = document.createElement('button');
@@ -486,8 +510,8 @@
   }
 
   function init() {
-    if (/[?&]edit(=|&|$)/.test(root.location.search)) stockageEcrire(EDIT_KEY, '1');
-    if (stockageLire(EDIT_KEY) === '1') afficherBouton();
+    installerDepuisLien();
+    afficherBouton();
 
     fetch(DATA_URL, { cache: 'no-cache' })
       .then(function (r) { return r.ok ? r.json() : []; })

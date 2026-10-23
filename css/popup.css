@@ -110,3 +110,17 @@
   #fp-modal .fp-row { grid-template-columns: 1fr; }
   #fp-modal .fp-duo { grid-template-columns: 1fr; }
 }
+
+/* --------------------------------------------------------------------------
+   Page autonome : grocontainer est le seul élément qui défile, comme dans le forum.
+   (sans hauteur fixée sur html/body, le « height:100% » d'origine ne s'appliquait plus
+   et le scroll snap de chaque fiche ne fonctionnait plus)
+   -------------------------------------------------------------------------- */
+html, body { height: 100%; margin: 0; overflow: hidden; }
+grocontainer { height: 100vh; height: 100dvh; overflow-y: auto; }
+
+#fp-modal button#fp-lien {
+  padding: 9px 14px; margin: 2px 0 6px; border-radius: 9px; cursor: pointer;
+  background: transparent; color: #cecece; border: 1px solid #ffffff26; font: 600 12px/1 Inter, sans-serif;
+}
+#fp-modal button#fp-lien:hover { background: #ffffff0f; }

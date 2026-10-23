@@ -7,5 +7,5 @@ Page des fiches de personnages, hébergée avec GitHub Pages.
 - `js/fiches-original.js` : tes scripts d'origine — `js/ajout-fiche.js` : le pop-up
 - `data/fiches.json` : les fiches ajoutées via le pop-up (une entrée par personnage, modifiable à la main)
 
-Pour ajouter une fiche : ouvrir la page avec `?edit` à la fin de l'adresse (une seule fois par navigateur),
-puis cliquer sur « Nouvelle fiche ».
+Pour ajouter une fiche : cliquer sur « Nouvelle fiche » en bas à droite de la page.
+Sur un nouvel appareil : ouvrir le « lien d'installation » (à copier depuis le panneau « Enregistrement sur GitHub »).
