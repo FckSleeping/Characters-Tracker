@@ -150,6 +150,7 @@ margin: auto;
 	scroll-snap-align: center;
   clip-path: border-box;
   backdrop-filter: brightness(1);
+	margin: 5px auto;
 }
 
 .container ::-webkit-scrollbar-thumb{background: var(--lateral) !important;}
