@@ -780,7 +780,6 @@
     $('fp-pmodal').addEventListener('submit', function (e) {
       e.preventDefault();
       stockageEcrire(CFG_KEY, JSON.stringify(lireConfigParams()));
-      majNav();
       fermerParams();
       toast('Paramètres enregistrés dans ce navigateur.');
     });
@@ -805,34 +804,57 @@
     document.body.style.overflow = '';
   }
 
-  /* ---------- Barre de navigation (en haut à droite, au-dessus de la zone des fiches) ---------- */
-  function majNav() {
-    var a = $('fp-astuce');
-    if (a) a.hidden = !lireConfig().clicDroit;
-  }
-
+  /* ---------- Boutons flottants (en haut à droite) ---------- */
   function afficherNav() {
     if ($('fp-nav')) return;
     var nav = document.createElement('nav');
     nav.id = 'fp-nav';
-    nav.innerHTML = '<span id="fp-astuce" hidden>clic droit sur une fiche pour la modifier</span>' +
-                    '<button type="button" class="fp-navbtn" id="fp-open"><span>＋</span> Nouvelle fiche</button>' +
+    nav.innerHTML = '<button type="button" class="fp-navbtn" id="fp-open"><span>＋</span> Nouvelle fiche</button>' +
                     '<button type="button" class="fp-navbtn" id="fp-params"><span>⚙</span> Paramètres</button>';
     document.body.appendChild(nav);
     $('fp-open').addEventListener('click', function () { ouvrirModal(''); });
     $('fp-params').addEventListener('click', ouvrirParams);
-    majNav();
   }
 
-  /* Clic droit sur une fiche = ouvrir le formulaire de modification (seulement si activé dans ce navigateur) */
+  /* ---------- Menu du clic droit sur une fiche ---------- */
+  var menuCtx = null;
+
+  function fermerMenu() {
+    if (menuCtx) { menuCtx.remove(); menuCtx = null; }
+  }
+
+  function ouvrirMenu(x, y, id) {
+    fermerMenu();
+    var m = document.createElement('div');
+    m.id = 'fp-ctx'; m.setAttribute('role', 'menu');
+    var b = document.createElement('button');
+    b.type = 'button'; b.setAttribute('role', 'menuitem');
+    b.innerHTML = '<span>✎</span> Modifier la fiche';
+    b.addEventListener('click', function () { fermerMenu(); ouvrirModal(id); });
+    m.appendChild(b);
+    document.body.appendChild(m);
+    var w = m.offsetWidth, h = m.offsetHeight;
+    m.style.left = Math.max(8, Math.min(x, root.innerWidth - w - 8)) + 'px';
+    m.style.top  = Math.max(8, Math.min(y, root.innerHeight - h - 8)) + 'px';
+    menuCtx = m;
+  }
+
+  // Seulement dans les navigateurs où c'est activé (jeton enregistré) : les visiteurs gardent leur menu habituel.
   document.addEventListener('contextmenu', function (e) {
+    var t = e.target;
+    if (t.closest && t.closest('#fp-ctx')) { e.preventDefault(); return; }
     if (e.shiftKey || !lireConfig().clicDroit) return;
     if (document.querySelector('.fp-overlay:not([hidden])')) return;
-    var carte = e.target.closest ? e.target.closest('grocontainer .container') : null;
-    if (!carte) return;
+    var carte = t.closest ? t.closest('grocontainer .container') : null;
+    if (!carte) { fermerMenu(); return; }
     e.preventDefault();
-    ouvrirModal(carte.id);
+    ouvrirMenu(e.clientX, e.clientY, carte.id);
   });
+  document.addEventListener('mousedown', function (e) { if (menuCtx && !menuCtx.contains(e.target)) fermerMenu(); }, true);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') fermerMenu(); });
+  document.addEventListener('scroll', fermerMenu, true);
+  root.addEventListener('resize', fermerMenu);
+  root.addEventListener('blur', fermerMenu);
 
   function init() {
     installerDepuisLien();
