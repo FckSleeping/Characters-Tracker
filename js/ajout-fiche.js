@@ -352,6 +352,31 @@
     }).join('');
   }
 
+  var champsApercu = [];                               // champs « lien d'image » qui ont une miniature
+
+  function apercu(input) {                             // ajoute une miniature à droite d'un champ de lien
+    var boite = document.createElement('div'); boite.className = 'fp-urlbox';
+    input.parentNode.insertBefore(boite, input);
+    boite.appendChild(input);
+    var vig = document.createElement('div'), img = document.createElement('img'), t = null;
+    vig.className = 'fp-thumb'; img.alt = ''; img.referrerPolicy = 'no-referrer';
+    vig.appendChild(img); boite.appendChild(vig);
+    img.addEventListener('load',  function () { vig.className = 'fp-thumb fp-ok'; });
+    img.addEventListener('error', function () { vig.className = 'fp-thumb fp-bad'; vig.title = 'Image introuvable ou lien invalide'; });
+    function maj() {
+      var u = input.value.trim();
+      vig.className = 'fp-thumb'; vig.title = '';
+      img.removeAttribute('src');
+      if (!u) return;
+      if (!/^https?:\/\//i.test(u)) { vig.className = 'fp-thumb fp-bad'; vig.title = 'Le lien doit commencer par http(s)://'; return; }
+      vig.className = 'fp-thumb fp-load';
+      img.src = u;
+    }
+    input.addEventListener('input', function () { clearTimeout(t); t = setTimeout(maj, 350); });
+    champsApercu.push(maj);
+  }
+  function majApercus() { champsApercu.forEach(function (f) { f(); }); }
+
   function champsImages() {
     var h = '';
     for (var i = 0; i < 8; i++) h += '<input id="fp-img-' + i + '" type="url" placeholder="Image ' + (i + 1) + ' — https://…">';
@@ -427,6 +452,8 @@
 
     listeInit('fp-anecdotes');
     listeInit('fp-histoire');
+    ['fp-banniere', 'fp-avatar', 'fp-pgif'].concat([0, 1, 2, 3, 4, 5, 6, 7].map(function (i) { return 'fp-img-' + i; }))
+      .forEach(function (id) { apercu($(id)); });
 
     $('fp-close').addEventListener('click', fermerModal);
     $('fp-cancel').addEventListener('click', fermerModal);
@@ -497,6 +524,7 @@
     listeSet('fp-anecdotes'); listeSet('fp-histoire');
     $('fp-choix').value = '';
     majTitre(); majIdHint(); statut('');
+    majApercus();
     ajusterTout();
   }
 
@@ -518,6 +546,7 @@
     for (var i = 0; i < 8; i++) $('fp-img-' + i).value = (f.aesthetic || [])[i] || '';
     $('fp-pnom').value = (f.partenaire && f.partenaire.nom) || '';
     $('fp-pgif').value = (f.partenaire && f.partenaire.gif) || '';
+    majApercus();
   }
 
   function chargerFiche(id) {
