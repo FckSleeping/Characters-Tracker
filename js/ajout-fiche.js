@@ -175,6 +175,7 @@
     }
     cfg.branch = cfg.branch || 'main';
     cfg.dir    = cfg.dir == null ? '' : cfg.dir;
+    cfg.clicDroit = cfg.clicDroit == null ? !!cfg.token : !!cfg.clicDroit;
     return cfg;
   }
 
@@ -389,9 +390,10 @@
 
     var ov = document.createElement('div');
     ov.id = 'fp-overlay';
+    ov.className = 'fp-overlay';
     ov.hidden = true;
     ov.innerHTML =
-      '<form id="fp-modal" autocomplete="off" novalidate>' +
+      '<form class="fp-modal" id="fp-modal" autocomplete="off" novalidate>' +
         '<div class="fp-top"><div class="fp-title" id="fp-titre">Nouvelle fiche</div>' +
           '<button type="button" class="fp-x" id="fp-close" aria-label="Fermer">×</button></div>' +
         '<div class="fp-body">' +
@@ -429,23 +431,9 @@
             '<label>Gif — lien<input id="fp-pgif" type="url" placeholder="https://…"></label>' +
             '<div class="fp-hint">Les deux champs vides : le bloc est masqué et l’histoire prend toute la hauteur, comme sur tes fiches sans ship.</div></div>' +
 
-          '<details class="fp-sec" id="fp-gh"><summary>Enregistrement sur GitHub</summary>' +
-            '<div class="fp-hint">Sans jeton, la fiche s’affiche et un fichier <b>fiches.json</b> à envoyer sur le dépôt est téléchargé. ' +
-            'Avec un jeton, la fiche est commitée toute seule. Le jeton reste uniquement dans ce navigateur.</div>' +
-            '<div class="fp-duo"><label>Compte<input id="fp-owner" type="text"></label>' +
-            '<label>Dépôt<input id="fp-repo" type="text"></label></div>' +
-            '<div class="fp-duo"><label>Branche<input id="fp-branch" type="text"></label>' +
-            '<label>Dossier du site <em>(« docs » si Pages publie depuis /docs)</em><input id="fp-dir" type="text" placeholder="vide = racine"></label></div>' +
-            '<label>Jeton d’accès (fine-grained, « Contents : Read and write » sur ce seul dépôt)' +
-            '<input id="fp-token" type="password" autocomplete="off"></label>' +
-            '<button type="button" id="fp-lien">Copier le lien d’installation</button>' +
-            '<div class="fp-hint">Ouvre ce lien sur un autre navigateur ou appareil : compte, dépôt et jeton s’y installent seuls. ' +
-            'Il contient le jeton : garde-le comme un mot de passe.</div>' +
-          '</details>' +
-
         '</div>' +
-        '<div class="fp-foot"><span id="fp-status" role="status"></span>' +
-          '<button type="button" id="fp-cancel">Annuler</button>' +
+        '<div class="fp-foot"><span class="fp-statusbar" id="fp-status" role="status"></span>' +
+          '<button type="button" class="fp-cancel" id="fp-cancel">Annuler</button>' +
           '<button type="submit" id="fp-save">Enregistrer la fiche</button></div>' +
       '</form>';
     document.body.appendChild(ov);
@@ -470,7 +458,6 @@
     $('fp-choix').addEventListener('change', function () {
       if (this.value) chargerFiche(this.value); else viderFormulaire();
     });
-    $('fp-lien').addEventListener('click', copierLienInstallation);
     $('fp-modal').addEventListener('submit', soumettre);
   }
 
@@ -500,25 +487,16 @@
     h.className = 'fp-hint' + (pris ? ' fp-err' : '');
   }
 
-  function statut(msg, erreur) {
-    var s = $('fp-status');
-    s.textContent = msg || '';
-    s.className = erreur ? 'fp-err' : '';
+  function statutDans(id, msg, erreur) {
+    var el = $(id);
+    el.textContent = msg || '';
+    el.classList.toggle('fp-err', !!erreur);
   }
-
-  function remplirConfig(cfg) {
-    $('fp-owner').value  = cfg.owner || '';
-    $('fp-repo').value   = cfg.repo || '';
-    $('fp-branch').value = cfg.branch || 'main';
-    $('fp-dir').value    = cfg.dir || '';
-    $('fp-token').value  = cfg.token || '';
-  }
+  function statut(msg, erreur) { statutDans('fp-status', msg, erreur); }
 
   function viderFormulaire() {
-    var cfg = lireConfigFormulaire();
     idEdition = '';
     $('fp-modal').reset();
-    remplirConfig(cfg);
     couleurTouchee = false;
     $('fp-v-' + IDX_COULEUR).value = $('fp-c2').value;
     listeSet('fp-anecdotes'); listeSet('fp-histoire');
@@ -568,9 +546,6 @@
     peuplerChoix();
     if (id) chargerFiche(id); else if (idEdition) viderFormulaire();
     majTitre(); majIdHint(); statut('');
-    var cfg = lireConfig();
-    remplirConfig(cfg);
-    $('fp-gh').open = !cfg.token;
     $('fp-overlay').hidden = false;
     document.body.style.overflow = 'hidden';
     ajusterTout();
@@ -607,15 +582,6 @@
       aesthetic: imgs.filter(Boolean),
       histoire: listeGet('fp-histoire'),
       partenaire: { nom: $('fp-pnom').value.trim(), gif: $('fp-pgif').value.trim() }
-    };
-  }
-
-  function lireConfigFormulaire() {
-    return {
-      owner: $('fp-owner').value.trim(), repo: $('fp-repo').value.trim(),
-      branch: $('fp-branch').value.trim() || 'main',
-      dir: $('fp-dir').value.trim().replace(/^\/+|\/+$/g, ''),
-      token: $('fp-token').value.trim()
     };
   }
 
@@ -699,10 +665,10 @@
 
   /* ---------- Lien d'installation (#setup=…) ---------- */
   function copierLienInstallation() {
-    var cfg = lireConfigFormulaire();
-    if (!cfg.owner || !cfg.repo || !cfg.token) return statut('Renseigne d’abord compte, dépôt et jeton.', true);
+    var cfg = lireConfigParams();
+    if (!cfg.owner || !cfg.repo || !cfg.token) return statutDans('fp-pstatus', 'Renseigne d’abord compte, dépôt et jeton.', true);
     var url = root.location.origin + root.location.pathname + '#setup=' + encodeURIComponent(utf8VersB64(JSON.stringify(cfg)));
-    var ok = function () { statut('Lien copié. Garde-le précieusement : il contient ton jeton.'); };
+    var ok = function () { statutDans('fp-pstatus', 'Lien copié. Garde-le précieusement : il contient ton jeton.'); };
     if (root.navigator.clipboard && root.navigator.clipboard.writeText) {
       root.navigator.clipboard.writeText(url).then(ok, function () { root.prompt('Copie ce lien :', url); });
     } else { root.prompt('Copie ce lien :', url); }
@@ -734,19 +700,17 @@
         return statut('Cet identifiant existe déjà — change le prénom, ou choisis la fiche à modifier en haut du formulaire.', true);
     }
 
-    var cfg = lireConfigFormulaire(), btn = $('fp-save');
+    var cfg = lireConfig(), btn = $('fp-save');
     btn.disabled = true;
     statut('Enregistrement…');
     try {
       if (cfg.token) {
         await enregistrerSurGitHub(f, cfg, edition);
-        stockageEcrire(CFG_KEY, JSON.stringify(cfg));
         toast('Fiche enregistrée sur GitHub. Elle sera visible par tout le monde dans une à deux minutes (temps de publication de Pages).');
       } else {
-        stockageEcrire(CFG_KEY, JSON.stringify(Object.assign({}, cfg, { token: '' })));
         fusionner(fichesDonnees, f, true);
         telechargerJson(fichesDonnees);
-        toast('Fiche mise à jour ici. Remplace data/fiches.json sur le dépôt par le fichier téléchargé pour la publier.');
+        toast('Fiche mise à jour ici. Pour la publier, remplace data/fiches.json sur le dépôt par le fichier téléchargé — ou enregistre un jeton dans ⚙ Paramètres pour que ce soit automatique.');
       }
       var carte = afficherFiche(f);
       viderFormulaire();
@@ -759,30 +723,120 @@
     }
   }
 
-  /* ---------- Boutons flottants ---------- */
-  function carteCourante() {                               // la fiche la plus proche du centre de l'écran
-    var milieu = root.innerHeight / 2, meilleure = null, ecart = Infinity;
-    Array.prototype.forEach.call(document.querySelectorAll('grocontainer .container'), function (c) {
-      var r = c.getBoundingClientRect(), d = Math.abs((r.top + r.bottom) / 2 - milieu);
-      if (d < ecart) { ecart = d; meilleure = c; }
-    });
-    return meilleure;
+  /* ---------- Paramètres (GitHub, clic droit) ---------- */
+  var paramsConstruit = false;
+
+  function lireConfigParams() {
+    return {
+      owner: $('fp-owner').value.trim(), repo: $('fp-repo').value.trim(),
+      branch: $('fp-branch').value.trim() || 'main',
+      dir: $('fp-dir').value.trim().replace(/^\/+|\/+$/g, ''),
+      token: $('fp-token').value.trim(),
+      clicDroit: $('fp-clicdroit').checked
+    };
   }
 
-  function afficherBoutons() {
-    if ($('fp-actions')) return;
-    var box = document.createElement('div');
-    box.id = 'fp-actions';
-    box.innerHTML = '<button type="button" class="fp-fab" id="fp-edit"><span>✎</span> Modifier cette fiche</button>' +
-                    '<button type="button" class="fp-fab" id="fp-open"><span>＋</span> Nouvelle fiche</button>';
-    document.body.appendChild(box);
-    $('fp-open').addEventListener('click', function () { ouvrirModal(''); });
-    $('fp-edit').addEventListener('click', function () { var c = carteCourante(); ouvrirModal(c ? c.id : ''); });
+  function construireParams() {
+    if (paramsConstruit) return;
+    paramsConstruit = true;
+    var ov = document.createElement('div');
+    ov.id = 'fp-overlay2'; ov.className = 'fp-overlay'; ov.hidden = true;
+    ov.innerHTML =
+      '<form class="fp-modal" id="fp-pmodal" autocomplete="off" novalidate>' +
+        '<div class="fp-top"><div class="fp-title">Paramètres</div>' +
+          '<button type="button" class="fp-x" id="fp-pclose" aria-label="Fermer">×</button></div>' +
+        '<div class="fp-body">' +
+          '<div class="fp-sec"><div class="fp-h">Enregistrement sur GitHub</div>' +
+            '<div class="fp-hint">Avec un jeton, chaque fiche est commitée toute seule sur le dépôt. Sans jeton, un fichier <b>fiches.json</b> à envoyer à la main est téléchargé. ' +
+            'Le jeton reste uniquement dans ce navigateur.</div>' +
+            '<div class="fp-duo"><label>Compte<input id="fp-owner" type="text"></label>' +
+            '<label>Dépôt<input id="fp-repo" type="text"></label></div>' +
+            '<div class="fp-duo"><label>Branche<input id="fp-branch" type="text"></label>' +
+            '<label>Dossier du site <em>(« docs » si Pages publie depuis /docs)</em><input id="fp-dir" type="text" placeholder="vide = racine"></label></div>' +
+            '<label>Jeton d’accès (fine-grained, « Contents : Read and write » sur ce seul dépôt)' +
+            '<input id="fp-token" type="password" autocomplete="off"></label>' +
+          '</div>' +
+          '<div class="fp-sec"><div class="fp-h">Modification</div>' +
+            '<label class="fp-check"><input type="checkbox" id="fp-clicdroit"> Clic droit sur une fiche pour la modifier</label>' +
+            '<div class="fp-hint">Réglage propre à ce navigateur, activé par défaut quand un jeton est enregistré : les visiteurs gardent leur menu habituel. ' +
+            'Maj + clic droit ouvre le menu du navigateur. Sur téléphone, choisis la fiche dans la liste en haut de « Nouvelle fiche ».</div>' +
+          '</div>' +
+          '<div class="fp-sec"><div class="fp-h">Lien d’installation</div>' +
+            '<button type="button" id="fp-lien">Copier le lien d’installation</button>' +
+            '<div class="fp-hint">Ouvre ce lien sur un autre navigateur ou appareil : compte, dépôt et jeton s’y installent seuls. ' +
+            'Il contient le jeton : garde-le comme un mot de passe.</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="fp-foot"><span class="fp-statusbar" id="fp-pstatus" role="status"></span>' +
+          '<button type="button" class="fp-cancel" id="fp-pfermer">Fermer</button>' +
+          '<button type="submit">Enregistrer</button></div>' +
+      '</form>';
+    document.body.appendChild(ov);
+    $('fp-pclose').addEventListener('click', fermerParams);
+    $('fp-pfermer').addEventListener('click', fermerParams);
+    ov.addEventListener('mousedown', function (e) { if (e.target === ov) fermerParams(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !ov.hidden) fermerParams(); });
+    $('fp-lien').addEventListener('click', copierLienInstallation);
+    $('fp-pmodal').addEventListener('submit', function (e) {
+      e.preventDefault();
+      stockageEcrire(CFG_KEY, JSON.stringify(lireConfigParams()));
+      majNav();
+      fermerParams();
+      toast('Paramètres enregistrés dans ce navigateur.');
+    });
   }
+
+  function ouvrirParams() {
+    construireParams();
+    var cfg = lireConfig();
+    $('fp-owner').value = cfg.owner || '';
+    $('fp-repo').value = cfg.repo || '';
+    $('fp-branch').value = cfg.branch || 'main';
+    $('fp-dir').value = cfg.dir || '';
+    $('fp-token').value = cfg.token || '';
+    $('fp-clicdroit').checked = !!cfg.clicDroit;
+    statutDans('fp-pstatus', '');
+    $('fp-overlay2').hidden = false;
+    document.body.style.overflow = 'hidden';
+  }
+
+  function fermerParams() {
+    $('fp-overlay2').hidden = true;
+    document.body.style.overflow = '';
+  }
+
+  /* ---------- Barre de navigation (en haut à droite, au-dessus de la zone des fiches) ---------- */
+  function majNav() {
+    var a = $('fp-astuce');
+    if (a) a.hidden = !lireConfig().clicDroit;
+  }
+
+  function afficherNav() {
+    if ($('fp-nav')) return;
+    var nav = document.createElement('nav');
+    nav.id = 'fp-nav';
+    nav.innerHTML = '<span id="fp-astuce" hidden>clic droit sur une fiche pour la modifier</span>' +
+                    '<button type="button" class="fp-navbtn" id="fp-open"><span>＋</span> Nouvelle fiche</button>' +
+                    '<button type="button" class="fp-navbtn" id="fp-params"><span>⚙</span> Paramètres</button>';
+    document.body.appendChild(nav);
+    $('fp-open').addEventListener('click', function () { ouvrirModal(''); });
+    $('fp-params').addEventListener('click', ouvrirParams);
+    majNav();
+  }
+
+  /* Clic droit sur une fiche = ouvrir le formulaire de modification (seulement si activé dans ce navigateur) */
+  document.addEventListener('contextmenu', function (e) {
+    if (e.shiftKey || !lireConfig().clicDroit) return;
+    if (document.querySelector('.fp-overlay:not([hidden])')) return;
+    var carte = e.target.closest ? e.target.closest('grocontainer .container') : null;
+    if (!carte) return;
+    e.preventDefault();
+    ouvrirModal(carte.id);
+  });
 
   function init() {
     installerDepuisLien();
-    afficherBoutons();
+    afficherNav();
 
     fetch(DATA_URL, { cache: 'no-cache' })
       .then(function (r) { return r.ok ? r.json() : []; })
