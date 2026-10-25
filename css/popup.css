@@ -7,8 +7,6 @@
 :root {
   --fpg-fill:   linear-gradient(135deg, rgba(255,255,255,.17) 0%, rgba(255,255,255,.05) 55%, rgba(255,255,255,.09) 100%);
   --fpg-edge:   rgba(255,255,255,.26);
-  --fpg-shine:  radial-gradient(120% 90% at 12% 0%, rgba(255,255,255,.38) 0%, rgba(255,255,255,.08) 38%, transparent 62%);
-  --fpg-inset:  inset 0 1px 0 rgba(255,255,255,.5), inset 0 -1px 0 rgba(255,255,255,.10), inset 0 0 22px rgba(255,255,255,.06);
 }
 
 .fp-overlay[hidden], #fp-toast[hidden] { display: none !important; }
