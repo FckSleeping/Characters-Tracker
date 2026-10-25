@@ -3,15 +3,14 @@
    (style.css n'est pas modifié : tout ce qui est nouveau est ici, préfixé fp-)
    ========================================================================== */
 
-/* Fiches ajoutées sans « important person » : même rendu que #kathleen, #rowdy, etc. */
-.container.no-ship .ship { display: none; }
-.container.no-ship .status .update { height: 624px; }
-
 #fp-overlay[hidden], #fp-toast[hidden] { display: none !important; }
 
-/* Bouton flottant */
-#fp-open {
+/* Boutons flottants */
+#fp-actions {
   position: fixed; right: 24px; bottom: 24px; z-index: 2000;
+  display: flex; flex-direction: column; align-items: flex-end; gap: 10px;
+}
+.fp-fab {
   display: flex; align-items: center; gap: 8px;
   padding: 12px 20px; border: 1px solid #ffffff2b; border-radius: 999px;
   background: #1a1a1aee; color: #fafafa; cursor: pointer;
@@ -19,8 +18,8 @@
   backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
   box-shadow: 0 6px 24px #0008; transition: transform .15s ease, background .15s ease;
 }
-#fp-open:hover { transform: translateY(-2px); background: #2a2a2aee; }
-#fp-open span { font-size: 17px; line-height: 1; }
+.fp-fab:hover { transform: translateY(-2px); background: #2a2a2aee; }
+.fp-fab span { font-size: 17px; line-height: 1; }
 
 /* Fond + fenêtre */
 #fp-overlay {
@@ -124,3 +123,26 @@ grocontainer { height: 100vh; height: 100dvh; overflow-y: auto; }
   background: transparent; color: #cecece; border: 1px solid #ffffff26; font: 600 12px/1 Inter, sans-serif;
 }
 #fp-modal button#fp-lien:hover { background: #ffffff0f; }
+
+/* Champs à plusieurs entrées (anecdotes, story) : un champ avec sa croix, et un « + » pour en ajouter */
+#fp-modal .fp-liste { display: flex; flex-wrap: wrap; gap: 12px 10px; align-items: flex-start; padding-top: 6px; }
+#fp-modal .fp-item { position: relative; flex: 1 1 calc(50% - 10px); min-width: 190px; }
+#fp-modal .fp-item input, #fp-modal .fp-item textarea { margin: 0; padding-right: 30px; }
+#fp-modal .fp-liste-longue .fp-item { flex: 1 1 100%; }
+#fp-modal .fp-liste-longue .fp-item textarea { min-height: 72px; overflow: hidden; }
+#fp-modal .fp-del {
+  position: absolute; top: -7px; right: -5px; width: 22px; height: 22px; padding: 0;
+  border: 0; border-radius: 50%; background: #d4d4d4; color: #111; cursor: pointer;
+  font: 700 15px/22px Inter, sans-serif; text-align: center;
+}
+#fp-modal .fp-del:hover { background: #fff; }
+#fp-modal .fp-add {
+  width: 42px; height: 42px; border-radius: 11px; cursor: pointer;
+  background: #0a0a0a; color: #fafafa; border: 1px solid #ffffff26; font: 400 22px/1 Inter, sans-serif;
+}
+#fp-modal .fp-add:hover { background: #1c1c1c; }
+
+/* 8 images */
+#fp-modal .fp-grille { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+#fp-modal .fp-grille input { margin: 0; }
+@media (max-width: 560px) { #fp-modal .fp-grille { grid-template-columns: 1fr; } }
