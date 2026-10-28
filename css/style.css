@@ -2,7 +2,7 @@ body{font-family: inter;
 font-size: 13px;background: #0c0c0c;}
 
 
-#thalia .header .gif img, #mabel .header .gif img {
+#thalia .header .gif img {
     object-position: 0 30%;
 }
 
@@ -79,7 +79,6 @@ margin: auto;
     --damian: -webkit-radial-gradient(center top, #56228f, #2e0757);
     --darcy: -webkit-radial-gradient(center top, #b0e176, #597735);
     --edwige: -webkit-radial-gradient(center top, #fce1ff, #c272ca);
-    --erin: -webkit-radial-gradient(center top, #e3a0ff, #b494c3);
     --grace: -webkit-radial-gradient(center top, #e6b2a6, #c14376);
     --heidi: -webkit-radial-gradient(center top, #ffb3b3, #a81212);
     --iezawa: -webkit-radial-gradient(center top, #a4bbc3, darkslategray);
@@ -90,11 +89,10 @@ margin: auto;
     --keith: -webkit-radial-gradient(center top, #b97c7c, #ea6800);
     --kitara: -webkit-radial-gradient(center top, #fff0d2, #FFD582);
     --leo: -webkit-radial-gradient(center top, #ffbed7, lightcoral);
-	  --mabel: -webkit-radial-gradient(center top, #9685f9, #4e2e89);
     --mado: -webkit-radial-gradient(center top, #e8beff, rebeccapurple);
     --miranda: -webkit-radial-gradient(center top, #ff6aa5, #850035);
     --molly: -webkit-radial-gradient(center top, #eebeff, #9d85ce);
-	  --natallya: -webkit-radial-gradient(center top, #ff9dd0, #a2557d);
+    --natallya: -webkit-radial-gradient(center top, #ff9dd0, #a2557d);
     --opal:-webkit-radial-gradient(center top, #e5bbd4, #ff97d5);
     --paris:-webkit-radial-gradient(center top, #624e9c, #442d8a);
     --raffaell: -webkit-radial-gradient(center top, #4441cb, #230e69);
@@ -981,8 +979,6 @@ cir4 {
 
 #edwige{--lateral: var(--edwige);}
 
-#erin{--lateral: var(--erin);}
-
 #grace{--lateral: var(--grace);}
 
 #heidi{--lateral: var(--heidi);}
@@ -1002,8 +998,6 @@ cir4 {
 #kitara{--lateral: var(--kitara);}
 
 #leo{--lateral: var(--leo);}
-
-#mabel{--lateral: var(--mabel);}
 
 #mado{--lateral: var(--mado);}
 
@@ -1064,11 +1058,11 @@ cir4 {
     border-radius: 8px;
 }
 
-#kathleen .ship, #rowdy .ship, #wendy .ship, #erin .ship, #mabel .ship, #natallya .ship, #zephyr .ship {
+#kathleen .ship, #rowdy .ship, #wendy .ship, #natallya .ship, #zephyr .ship {
     display: none;
 }
 
-#kathleen .status .update, #rowdy .status .update, #wendy .status .update, #erin .status .update, #mabel .status .update, #natallya .status .update, #zephyr .status .update {
+#kathleen .status .update, #rowdy .status .update, #wendy .status .update, #natallya .status .update, #zephyr .status .update {
     height: 624px;
 }
 
