@@ -1,1 +1,109 @@
-[]
+[
+  {
+    "id": "alexei",
+    "nom": "alexeï",
+    "icone": "alternate",
+    "banniere": "https://64.media.tumblr.com/e1c5b69c606e0219b599ca1c2b160940/732cb37cbd06cec0-d3/s1280x1920/c0d0525a0fb08733e5b8c5a0e30ca86bda457809.gif",
+    "avatar": "https://i.imgur.com/uxGjf9l.png",
+    "couleurs": [
+      "#adc7b7",
+      "#228b22"
+    ],
+    "about": [
+      {
+        "valeur": "alexeï wolf avery",
+        "precision": "irlande"
+      },
+      {
+        "valeur": "milicien",
+        "precision": ""
+      },
+      {
+        "valeur": "",
+        "precision": "irlande"
+      },
+      {
+        "valeur": "",
+        "precision": ""
+      },
+      {
+        "valeur": "homme cis",
+        "precision": "he/him"
+      },
+      {
+        "valeur": "hétérosexuel",
+        "precision": ""
+      },
+      {
+        "valeur": "jean kirstein",
+        "precision": "shingeki no kyojin"
+      },
+      {
+        "valeur": "aaron-taylor johnson",
+        "precision": ""
+      },
+      {
+        "valeur": "",
+        "precision": ""
+      },
+      {
+        "valeur": "forestgreen",
+        "precision": ""
+      },
+      {
+        "valeur": "",
+        "precision": ""
+      },
+      {
+        "valeur": "",
+        "precision": ""
+      }
+    ],
+    "anecdotes": [
+      "ancien professeur de sport",
+      "être strict n’est pas un trait de caractère, plutôt un mode de vie",
+      "ne comprend rien à la technologie",
+      "possède malgré tout un compte instagram qu’il doit à sa fille adoptive",
+      "la femme de sa vie est morte avant qu’il ne puisse la demander en mariage",
+      "il garde malgré tout la bague de fiancailles qu’il avait acheté avec ses économies",
+      "a perdu tout sens de bienveillance quand il s’est retrouvé seul",
+      "sa fille l’a renié quand la haine a pris possession de lui",
+      "il n’a gardé aucun contact avec ses anciens collègues, peu importe à quel point ils étaient proches",
+      "ça lui rappelle sa disparition",
+      "straith edge."
+    ],
+    "aesthetic": [
+      "https://i.imgur.com/HNQYyYr.png",
+      "https://i.imgur.com/x9VceN5.png",
+      "https://i.imgur.com/mJ54fuR.png",
+      "https://i.imgur.com/5Pekl6F.png",
+      "https://i.imgur.com/flxWgJ2.png",
+      "https://i.imgur.com/ewpW0Sh.png",
+      "https://i.imgur.com/niOISIU.png",
+      "https://i.imgur.com/aKAifvs.png"
+    ],
+    "histoire": [
+      "Une enfance en dent de scie dans un quartier défavorisé, teinté par le départ de sa mère quand il n’était encore qu’un bambin et le manque d’amour de son père.",
+      "Il fait de son mieux pour réussir, mais il n’arrive jamais à satisfaire les attentes du paternel.",
+      "Quatorze ans à peine, il vole une cigarette dans le manteau de son père. Il disait que ça réduisait le stress. L’adolescent a craché ses poumons, mais y est vite revenu.",
+      "Son père décède dans un accident de voiture. Il enrage, perd pied. On tente de l’aider, de le calmer, de le consoler, mais il n’y a plus rien à faire.",
+      "Les aînés du quartier le prennent avec lui, réussissent là où personne n’a jamais fait la moindre percée. On lui tend une arme, pas pour tuer, simplement pour qu’il apprenne à la démonter, la nettoyer, la manier. Il pense à une revanche sur la vie, mais on ne se venge pas d’un mort.",
+      "Plus le temps passe et plus il se rapproche de sombrer définitivement. C’est là qu’il rencontre Sylvia, douce, attentive, précieuse à ses yeux. Elle lui ouvre les yeux, un peu trop tard sûrement, pour qu’il sorte de ce chemin de haine.",
+      "Ils s’aiment, c’est ce qu’ils pensent ; mais il n’y a rien pour eux. Ils vivent dans des mondes opposés et le temps eu tôt fait de le ramener dans la mauvaise pente quand elle n’était plus là pour l’en sortir.",
+      "Un jour il s’attaque à la mauvaise personne, qui le passe à tabac et lui apprend la dure réalité: on ne réussit pas dans la vie quand on joue au criminel en herbe.",
+      "Il finit par suivre les conseils de ce vieillard, tente de mettre un peu d’ordre dans sa vie. Il prend le premier job qui lui tombe sous la main, devient surveillant dans le lycée qu’il a abandonné des années auparavant. S’il a fait des erreurs il pourra au moins en empêcher certains de les reproduire.",
+      "Il rencontre Miranda. Elle a un caractère aussi puissant que le sien, sans demie mesure. Elle devient un refuge, un catalyseur pour sa colère.",
+      "Mais Miranda, fidèle à elle-même, jalouse à ne plus savoir qu’en faire, jure qu’il a une aventure dans son dos. Il nie en bloc, il est bien trop accroché à elle pour imaginer faire pareil chose, mais elle n’écoute rien, fait ses valises et ne laisse aucune trace.",
+      "La colère revient, happée par le vide qu’elle laisse derrière elle. Il finit par la retrouver dans sa demeure, trempé jusqu’aux os. Elle cède, lui ouvre la porte, écoute ce qu’il a à lui dire. Et pour une fois, *elle écoute vraiment.*",
+      "Si elle ne perd pas sa jalousie maladive, elle se fie à lui et leur relation n’en devient que plus forte. Elle décide d’adopter l’une de ses élèves, qu’elle tenait sous sa tutelle depuis quelques années maintenant. Il ne négocie pas, ajoute son nom sur les papiers.",
+      "Et sans prévenir, c’est la maladie qui l’emporte. Le verdict est sans appel. Leucémie foudroyante. Il n’y a rien que les médecins puissent faire, lui encore moins. Il serre la bague de fiançailles dans une main, celle qui devait la porter dans la seconde. Il est trop tard maintenant.",
+      "L’adolescente devenue majeure s’échappe quand il reprend ses mauvaises habitudes, quand il devient juste une ombre planant dans la maison vide. Il ne rayonne plus, seule la colère règne sur son âme.",
+      "Alors il décide de quitter son emploi, de faire ce qu’il a toujours connu et l’a tenu en vie jusqu’alors. Si toutes les personnes à qui il tient finissent par disparaître, il n’a plus de raison d’être bon pour son prochain.",
+      "On le garde pour ses compétences en armement, devient le bras armé d’une organisation bien plus grande que lui. Il s'imagine mourir bien vite pour retrouver celle qu’il aime. C’est plus simple que de se donner la mort ; bien moins douloureux d’une certaine façon."
+    ],
+    "partenaire": {
+      "nom": "MIRANDA MALATESTA",
+      "gif": "https://i.pinimg.com/originals/2b/8f/20/2b8f201ed41276444edb83b2612e6868.gif"
+    }
+  }
+]
